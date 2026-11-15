@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; form-action 'self'; base-uri 'none'; object-src 'none'"
+    />
+    <meta name="theme-color" content="#f5f4f0" />
+    <title>Mix &amp; Match — POS Demo</title>
+    <link rel="icon" href="./assets/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar" aria-label="Demo navigation">
+        <a class="brand" href="#overview" aria-label="Mix & Match demo">
+          <img src="./assets/logo.svg" alt="Mix & Match" />
+          <span class="brand-tag">POS DEMO</span>
+        </a>
+        <div class="sidebar-label">WORKSPACE</div>
+        <nav class="nav-list">
+          <button class="nav-link is-active" type="button" data-view="dashboard" aria-current="page">
+            <span class="nav-icon" aria-hidden="true">⌂</span><span>Overview</span>
+          </button>
+          <button class="nav-link" type="button" data-view="products">
+            <span class="nav-icon" aria-hidden="true">▦</span><span>Products &amp; inventory</span>
+          </button>
+          <button class="nav-link" type="button" data-view="pos">
+            <span class="nav-icon" aria-hidden="true">＋</span><span>Checkout</span>
+          </button>
+          <button class="nav-link" type="button" data-view="orders">
+            <span class="nav-icon" aria-hidden="true">≡</span><span>Sales history</span>
+          </button>
+        </nav>
+        <div class="sidebar-bottom">
+          <span class="sidebar-dot" aria-hidden="true"></span>
+          <div><strong>Demo workspace</strong><small>Saved in this browser</small></div>
+        </div>
+      </aside>
+
+      <main class="main-area">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="icon-button menu-button" id="menuButton" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+            <div>
+              <div class="eyebrow">MIX &amp; MATCH <span class="eyebrow-dot">/</span> DEMO</div>
+              <h1 id="pageTitle">Overview</h1>
+            </div>
+          </div>
+          <div class="topbar-actions">
+            <span class="save-status" id="saveStatus" role="status" aria-live="polite">
+              <span class="status-dot" aria-hidden="true"></span> Saved in this browser
+            </span>
+            <button class="button button-quiet" id="resetButton" type="button">Reset demo</button>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <section class="view-panel is-visible" id="overview" data-view-panel="dashboard" aria-labelledby="dashboardHeading">
+            <div class="section-heading">
+              <div><p class="eyebrow">SAMPLE STORE</p><h2 id="dashboardHeading">Welcome to Mix &amp; Match</h2><p class="section-subtitle">A snapshot of fictional sales and inventory for this demo.</p></div>
+              <button class="button button-primary" type="button" data-go-view="pos"><span aria-hidden="true">＋</span> Create demo sale</button>
+            </div>
+            <div class="metric-grid" id="metricGrid"></div>
+            <div class="dashboard-grid">
+              <article class="card chart-card">
+                <div class="card-heading"><div><h3>Sales trend</h3><p>Last 7 days · demo transactions</p></div><span class="soft-pill">IDR</span></div>
+                <div class="chart-legend"><span class="legend-dot"></span> Sales</div>
+                <div class="sales-chart" id="salesChart" aria-label="Sales chart for the last seven days" role="img"></div>
+              </article>
+              <article class="card stock-card">
+                <div class="card-heading"><div><h3>Stock to review</h3><p>At or below the minimum level</p></div><span class="warning-count" id="lowStockCount">0</span></div>
+                <div class="low-stock-list" id="lowStockList"></div>
+                <button class="text-button" type="button" data-go-view="products">View all inventory <span aria-hidden="true">→</span></button>
+              </article>
+              <article class="card table-card">
+                <div class="card-heading"><div><h3>Best-selling products</h3><p>Ranked by units sold</p></div></div>
+                <div class="table-wrap"><table><thead><tr><th>Product</th><th>Units sold</th><th>Price</th></tr></thead><tbody id="bestSellers"></tbody></table></div>
+              </article>
+              <article class="card table-card">
+                <div class="card-heading"><div><h3>Recent sales</h3><p>Sample data and activity from this session</p></div><button class="text-button" type="button" data-go-view="orders">All sales <span aria-hidden="true">→</span></button></div>
+                <div class="recent-orders" id="recentOrders"></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="view-panel" id="view-products" data-view-panel="products" aria-labelledby="productsHeading" hidden>
+            <div class="section-heading">
+              <div><p class="eyebrow">INVENTORY</p><h2 id="productsHeading">Products &amp; inventory</h2><p class="section-subtitle">Manage the fictional catalog and adjust stock for this demo.</p></div>
+              <button class="button button-primary" id="addProductButton" type="button"><span aria-hidden="true">＋</span> Add product</button>
+            </div>
+            <article class="card table-card product-card">
+              <div class="toolbar">
+                <label class="search-field"><span aria-hidden="true">⌕</span><input id="productSearch" type="search" placeholder="Search product name or SKU" autocomplete="off" /><span class="sr-only">Search product name or SKU</span></label>
+                <label class="select-field"><span class="sr-only">Filter by category</span><select id="categoryFilter"><option value="">All categories</option></select></label>
+                <span class="result-count" id="productCount"></span>
+              </div>
+              <div class="table-wrap"><table class="product-table"><thead><tr><th>Product</th><th>Category</th><th>Variant</th><th>Stock</th><th>Selling price</th><th class="align-right">Actions</th></tr></thead><tbody id="productsTable"></tbody></table></div>
+              <p class="table-footnote">Products, SKUs, and brands in this catalog are fictional.</p>
+            </article>
+          </section>
+
+          <section class="view-panel" id="view-pos" data-view-panel="pos" aria-labelledby="posHeading" hidden>
+            <div class="section-heading">
+              <div><p class="eyebrow">CHECKOUT</p><h2 id="posHeading">Demo checkout</h2><p class="section-subtitle">Choose products, adjust quantities, and record a simulated sale.</p></div>
+              <span class="simulation-pill"><span aria-hidden="true">●</span> Simulation only · no real payment</span>
+            </div>
+            <div class="pos-layout">
+              <article class="card catalog-card">
+                <div class="card-heading"><div><h3>Choose products</h3><p>Items available in demo inventory</p></div></div>
+                <div class="toolbar pos-toolbar">
+                  <label class="search-field"><span aria-hidden="true">⌕</span><input id="posSearch" type="search" placeholder="Search name or SKU" autocomplete="off" /><span class="sr-only">Search product name or SKU</span></label>
+                  <label class="select-field"><span class="sr-only">Filter by category</span><select id="posCategoryFilter"><option value="">All categories</option></select></label>
+                </div>
+                <div class="pos-product-grid" id="posProducts"></div>
+              </article>
+              <article class="card cart-card">
+                <div class="card-heading cart-heading"><div><h3>Cart</h3><p><span id="cartItemCount">0 items</span> · local demo</p></div><button class="text-button danger-text" id="clearCartButton" type="button">Clear cart</button></div>
+                <div class="cart-lines" id="cartLines"></div>
+                <div class="cart-summary">
+                  <div class="summary-row"><span>Subtotal</span><strong id="cartSubtotal">IDR 0</strong></div>
+                  <label class="discount-row" for="discountInput"><span>Discount (%)</span><input id="discountInput" type="number" min="0" max="100" step="1" value="0" inputmode="numeric" /></label>
+                  <div class="summary-row total-row"><span>Demo total</span><strong id="cartTotal">IDR 0</strong></div>
+                </div>
+                <label class="payment-label" for="paymentMethod">Demo payment method</label>
+                <select class="payment-select" id="paymentMethod"><option value="Cash (simulation)">Cash (simulation)</option><option value="Non-cash (simulation)">Non-cash (simulation)</option></select>
+                <p class="payment-note">This is stored as a label only. No card, QR code, or bank account is processed.</p>
+                <button class="button button-primary checkout-button" id="checkoutButton" type="button">Record simulated sale <span aria-hidden="true">→</span></button>
+              </article>
+            </div>
+          </section>
+
+          <section class="view-panel" id="view-orders" data-view-panel="orders" aria-labelledby="ordersHeading" hidden>
+            <div class="section-heading">
+              <div><p class="eyebrow">SALES</p><h2 id="ordersHeading">Sales history</h2><p class="section-subtitle">Sample receipts and sales created in this browser.</p></div>
+              <span class="soft-pill" id="orderCount">0 sales</span>
+            </div>
+            <article class="card table-card">
+              <div class="toolbar">
+                <label class="search-field"><span aria-hidden="true">⌕</span><input id="orderSearch" type="search" placeholder="Search receipt or demo customer" autocomplete="off" /><span class="sr-only">Search sales</span></label>
+                <span class="table-caption">Simulated payments only</span>
+              </div>
+              <div class="table-wrap"><table><thead><tr><th>Receipt</th><th>Date &amp; time</th><th>Customer</th><th>Items</th><th>Method</th><th class="align-right">Total</th></tr></thead><tbody id="ordersTable"></tbody></table></div>
+            </article>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <dialog class="product-dialog" id="productDialog" aria-labelledby="productDialogTitle">
+      <form id="productForm">
+        <div class="dialog-heading"><div><p class="eyebrow">DEMO CATALOG</p><h2 id="productDialogTitle">Add product</h2></div><button class="icon-button" id="closeDialogButton" type="button" aria-label="Close">×</button></div>
+        <input id="productIdInput" type="hidden" />
+        <div class="form-grid">
+          <label class="form-field"><span>SKU</span><input id="productCodeInput" required maxlength="20" placeholder="Example: SHI-101" /></label>
+          <label class="form-field"><span>Product name</span><input id="productNameInput" required maxlength="70" placeholder="Fictional product name" /></label>
+          <label class="form-field"><span>Category</span><select id="productCategoryInput" required></select></label>
+          <label class="form-field"><span>Fictional brand</span><input id="productBrandInput" maxlength="50" placeholder="Example: Rove Atelier" /></label>
+          <label class="form-field"><span>Color</span><input id="productColorInput" maxlength="30" placeholder="Example: Sage" /></label>
+          <label class="form-field"><span>Size</span><input id="productSizeInput" maxlength="20" placeholder="Example: M" /></label>
+          <label class="form-field"><span>Starting stock</span><input id="productStockInput" type="number" min="0" step="1" value="5" required /></label>
+          <label class="form-field"><span>Minimum stock level</span><input id="productMinStockInput" type="number" min="0" step="1" value="3" required /></label>
+          <label class="form-field"><span>Cost price (IDR)</span><input id="productCostInput" type="number" min="0" step="1000" value="50000" required /></label>
+          <label class="form-field"><span>Selling price (IDR)</span><input id="productPriceInput" type="number" min="0" step="1000" value="90000" required /></label>
+        </div>
+        <p class="form-error" id="productFormError" role="alert" hidden></p>
+        <div class="dialog-actions"><button class="button button-quiet" id="cancelDialogButton" type="button">Cancel</button><button class="button button-primary" type="submit">Save in this browser</button></div>
+      </form>
+    </dialog>
+    <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+  </body>
+</html>
